@@ -119,14 +119,33 @@ document.addEventListener('DOMContentLoaded', function() {
         serverresponse.innerHTML= "<p class='serverresponsegreen'>Your URL(s) saved successfully.</>";
         setTimeout(function() {
           serverresponse.innerHTML="";
-			}, 3000);
-		}
-    else {
-			serverresponse.innerHTML= "<p  class='serverresponsered'>Failed to save. Try again.</>";
-		}
-	};
-
-	http.send(jsonString);
-
+  			}, 3000);
+		  }
+      else {
+			   serverresponse.innerHTML= "<p  class='serverresponsered'>Failed to save. Try again.</>";
+		  }
+	  };
+    http.send(jsonString);
   }
 });
+
+// function disableSelect(urlbox){
+//   if (urlbox.addEventListener){
+//     urlbox.addEventListener("mousedown", disabler, "false");
+//   } else {
+//     urlbox.attachEvent("onselectstart", disabler);
+//   }
+// }
+//
+// function enableSelect(urlbox){
+//   if (urlbox.addEventListener){
+//     urlbox.removeEventListener("mousedown", disabler, "false");
+//   } else {
+//     urlbox.detachEvent("onselectstart", disabler);
+//   }
+// }
+//
+// function disabler(e){
+//   if(e.preventDefault){ e.preventDefault(); }
+//   return false;
+// }
