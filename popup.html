@@ -15,11 +15,14 @@
   </div>
 
   <div id="afterloginblock" style="display:none" class="afterloginblock">
+    <label>URL</label>
     <input type="text" value="" placeholder="Enter url here" id="url" />
+    <label>Title</label>
+    <input type="text" value="" placeholder="Title" id="urltitle" />
 	  <p id="urlerror"></p>
-    <button id="submiturl">Save Current URL</button>
+    <button id="submiturl">Save Current Tab</button>
     </br>
-    <button id="submitallurl">Save All Tab URLs</button>
+    <button id="submitallurl">Save All Tabs</button>
     <p id="errorurl"></p>
     <div id="serverresponse"></div>
   </div>
@@ -27,7 +30,6 @@
   <style>
     body {
       background-color: #222;
-      color: white;
       font-family: Helvetica, arial, sans-serif;
     }
 
@@ -41,6 +43,7 @@
       font-size: 18px;
       text-align: center;
       letter-spacing: 3px;
+      color: white;
     }
 
     .login-block {
@@ -80,11 +83,12 @@
       height: 42px;
       box-sizing: border-box;
       border: 1px solid #ccc;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       font-size: 14px;
       font-family: Montserrat;
       padding: 0 20px 0 5px;
       outline: none;
+      color: #666;
     }
 
     .login-block input:active, .login-block input:focus {
