@@ -1,17 +1,17 @@
 
 document.addEventListener('DOMContentLoaded', function() {
-  var submitbutton = document.getElementById('submitbutton');
-  var loginblock = document.getElementById('loginblock');
-  var afterloginblock = document.getElementById('afterloginblock');
-  var error = document.getElementById('error');
-	var urlerror = document.getElementById('error');
-  var username = document.getElementById('username');
-  var email = document.getElementById('email');
-  var submiturl = document.getElementById('submiturl');
-  var submitallurl = document.getElementById('submitallurl');
-  var urlbox = document.getElementById('url');
- 	var serverresponse = document.getElementById('serverresponse');
-  var isLocal = true;
+  var submitbutton = document.getElementById('submitbutton'),
+      loginblock = document.getElementById('loginblock'),
+      afterloginblock = document.getElementById('afterloginblock'),
+      error = document.getElementById('error'),
+      urlerror = document.getElementById('error'),
+      username = document.getElementById('username'),
+      email = document.getElementById('email'),
+      submiturl = document.getElementById('submiturl'),
+      submitallurl = document.getElementById('submitallurl'),
+      urlbox = document.getElementById('url'),
+      serverresponse = document.getElementById('serverresponse'),
+      isLocal = true;
 
   serverresponse.innerHTML = "";
 
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
     else {
       http.open('POST', 'https://collated.net/api/v1/items/chrome', true);
     }
-    
+
   	http.setRequestHeader('Access-Control-Allow-Headers', '*');
   	http.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
   	http.onreadystatechange = function() {

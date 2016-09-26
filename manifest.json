@@ -6,11 +6,8 @@
   {},
   "browser_action": {
     "default_popup": "popup.html",
-    "default_icon":"icons/icon128.png"
+    "default_icon": "icons/icon128.png"
   },
-  "manifest_version":2,
-  "permissions": [
-    "tabs",
-	"*://*.collated.net/*"
-  ]
+  "manifest_version": 2,
+  "permissions": ["tabs", "*://*.collated.net/*"]
 }
