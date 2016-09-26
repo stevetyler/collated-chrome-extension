@@ -17,16 +17,16 @@
   <div id="afterloginblock" style="display:none" class="afterloginblock">
     <input type="text" value="" placeholder="Enter url here" id="url" />
 	  <p id="urlerror"></p>
-    <button id="submiturl">Save Current Tab</button>
+    <button id="submiturl">Save Current URL</button>
     </br>
-    <button id="submitallurl">Save All Tabs</button>
+    <button id="submitallurl">Save All Tab URLs</button>
     <p id="errorurl"></p>
     <div id="serverresponse"></div>
   </div>
 
   <style>
     body {
-      background-color: #222222;
+      background-color: #222;
       color: white;
       font-family: courier,arial,sans-serif;
     }
@@ -46,21 +46,17 @@
       width: 200px;
       padding: 20px;
       background: #fff;
-      /*border-top: 5px solid #858585;*/
       margin: 0 auto;
     }
 
     .afterloginblock {
       width: 200px;
-    	/*height : 100px;*/
       padding: 20px;
       background: white;
-      /*border-top: 5px solid #858585;;*/
       margin: 0 auto;
     }
 
     .login-block h1,.afterloginblock h1 {
-      /*text-align: center;*/
       color: #000;
       font-size: 18px;
       text-transform: uppercase;
@@ -80,26 +76,6 @@
       outline: none;
     }
 
-    .login-block input#username {
-      background: #fff url('http://i.imgur.com/u0XmBmv.png') 20px top no-repeat;
-      background-size: 16px 80px;
-    }
-
-    .login-block input#username:focus {
-      background: #fff url('http://i.imgur.com/u0XmBmv.png') 20px bottom no-repeat;
-      background-size: 16px 80px;
-    }
-
-    .login-block input#email {
-      background: #fff url('http://i.imgur.com/u0XmBmv.png') 20px top no-repeat;
-      background-size: 16px 80px;
-    }
-
-    .login-block input#email:focus {
-      background: #fff url('http://i.imgur.com/u0XmBmv.png') 20px bottom no-repeat;
-      background-size: 16px 80px;
-    }
-
     .login-block input:active, .login-block input:focus {
       border: 1px solid #858585;;
     }
@@ -111,7 +87,6 @@
       box-sizing: border-box;
       border: 1px solid #858585;;
       color: #fff;
-      /*text-transform: uppercase;*/
       font-size: 14px;
       font-family: Montserrat;
       outline: none;
