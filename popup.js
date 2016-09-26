@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
       submiturl = document.getElementById('submiturl'),
       submitallurl = document.getElementById('submitallurl'),
       urlbox = document.getElementById('url'),
+      urltitlebox = document.getElementById('urltitle'),
       serverresponse = document.getElementById('serverresponse'),
       isLocal = true;
 
@@ -21,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
       currentWindow: true
     }, function(tab) {
       urlbox.value = tab[0].url;
-      console.log(tab[0].url);
+      urltitlebox.value = tab[0].title;
    });
   }
 
@@ -105,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
   	var jsonString = JSON.stringify(obj);
 
     if (isLocal) {
-      http.open('POST', 'https://collated.net/api/v1/items/chrome', true);
+      http.open('POST', 'http://localhost:3000/api/v1/items/chrome', true);
     }
     else {
       http.open('POST', 'https://collated.net/api/v1/items/chrome', true);
