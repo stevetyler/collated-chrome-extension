@@ -8,7 +8,7 @@
 
   <h1>collated</h1>
   <div id="loginblock" class="login-block">
-    <input type="text" value="" placeholder="Username" id="username" autocomplete="off" />
+    <input type="text" placeholder="Username" id="username" autocomplete="off" />
     <input type="text" value="" placeholder="Email" id="email" autocomplete="off" />
     <button id="submitbutton">Submit</button>
   	<p id="error"></p>
@@ -16,13 +16,13 @@
 
   <div id="afterloginblock" style="display:none" class="afterloginblock">
     <label>URL</label>
-    <input type="text" value="" placeholder="Enter url here" id="url" />
+    <input type="text" value="" tabIndex="-1" placeholder="Enter url here" id="url" />
     <label>Title</label>
-    <input type="text" value="" placeholder="Title" id="urltitle" />
+    <input type="text" value="" tabIndex="-1" placeholder="Title" id="urltitle" />
 	  <p id="urlerror"></p>
-    <button id="submiturl">Save Current Tab</button>
+    <button id="submiturl" tabIndex="-1">Save Current Tab</button>
     </br>
-    <button id="submitallurl">Save All Tabs</button>
+    <button id="submitallurl" tabIndex="-1">Save All Tabs</button>
     <p id="errorurl"></p>
     <div id="serverresponse"></div>
   </div>
@@ -54,7 +54,7 @@
     }
 
     .afterloginblock {
-      width: 200px;
+      width: 300px;
       padding: 20px;
       background: white;
       margin: 0 auto;

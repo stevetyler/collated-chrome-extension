@@ -117,36 +117,16 @@ document.addEventListener('DOMContentLoaded', function() {
   	http.onreadystatechange = function() {
       if (http.readyState == 4 && http.status == 200) {
         urlbox.value="";
+        urltitlebox.value="";
         serverresponse.innerHTML= "<p class='serverresponsegreen'>Your URL(s) saved successfully.</>";
         setTimeout(function() {
           serverresponse.innerHTML="";
   			}, 3000);
 		  }
       else {
-			   serverresponse.innerHTML= "<p  class='serverresponsered'>Failed to save. Try again.</>";
+			   serverresponse.innerHTML= "<p  class='serverresponsered'>Failed to save. Please try again or contact support@collated.net</>";
 		  }
 	  };
     http.send(jsonString);
   }
 });
-
-// function disableSelect(urlbox){
-//   if (urlbox.addEventListener){
-//     urlbox.addEventListener("mousedown", disabler, "false");
-//   } else {
-//     urlbox.attachEvent("onselectstart", disabler);
-//   }
-// }
-//
-// function enableSelect(urlbox){
-//   if (urlbox.addEventListener){
-//     urlbox.removeEventListener("mousedown", disabler, "false");
-//   } else {
-//     urlbox.detachEvent("onselectstart", disabler);
-//   }
-// }
-//
-// function disabler(e){
-//   if(e.preventDefault){ e.preventDefault(); }
-//   return false;
-// }
