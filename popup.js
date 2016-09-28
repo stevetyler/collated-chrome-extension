@@ -1,5 +1,7 @@
 
 document.addEventListener('DOMContentLoaded', function() {
+  var isTest = true;
+
   var submitbutton = document.getElementById('submitbutton'),
       loginblock = document.getElementById('loginblock'),
       afterloginblock = document.getElementById('afterloginblock'),
@@ -11,8 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
       submitall = document.getElementById('submitall'),
       urlbox = document.getElementById('url'),
       urltitlebox = document.getElementById('urltitle'),
-      serverresponse = document.getElementById('serverresponse'),
-      isLocal = true;
+      serverresponse = document.getElementById('serverresponse');
 
   serverresponse.innerHTML = "";
 
@@ -38,7 +39,6 @@ document.addEventListener('DOMContentLoaded', function() {
         currentWindow: true
       }, function(tab) {
         urlbox.value = tab[0].url;
-        console.log(tab[0].url);
       });
     }
     else {
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
   submitcurrent.addEventListener('click', function() {
     if (urlbox.value.length > 0) {
       if (checkcredentials()) {
-        sendTabToServer(urlbox.value, urltitlebox.value);
+        sendTabToServer([urlbox.value], [urltitlebox.value]);
         urlerror.innerHTML = "";
       }
       else {
@@ -66,16 +66,12 @@ document.addEventListener('DOMContentLoaded', function() {
       chrome.tabs.getAllInWindow(null, function(tabs) {
         var urlarr = [];
         var titlearr = [];
-        var date = new Date();
 
         for (var i = 0; i < tabs.length; i++) {
           urlarr.push(tabs[i].url);
           titlearr.push(tabs[i].title);
         }
-        urlstring = urlarr.join(', ');
-        titlestring = titlearr.join(', ');
-        grouptitle = '<span>' + 'Tab URLs saved: ' + '</span>';
-        sendTabToServer(urlstring, titlestring, grouptitle);
+        sendTabToServer(urlarr, titlearr);
       });
     }
     else {
@@ -98,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  function sendTabToServer(urlvalue, urltitlevalue, grouptitle) {
+  function sendTabToServer(urlarr, titlearr) {
     serverresponse.innerHTML = "";
     var collatedemail = localStorage.getItem("collatedemail");
     var collatedusername = localStorage.getItem("collatedusername");
@@ -106,15 +102,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var obj = {
       email: collatedemail,
-      grouptitle: grouptitle,
-      url: urlvalue,
-      title: urltitlevalue,
+      urlarr: urlarr,
+      titlearr: titlearr,
       username: collatedusername
     };
 
     var jsonString = JSON.stringify(obj);
 
-    if (isLocal) {
+    if (isTest) {
       http.open('POST', 'http://localhost:3000/api/v1/items/chrome', true);
     }
     else {
