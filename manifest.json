@@ -1,7 +1,7 @@
 {
   "name": "Collated",
   "version": "1.0",
-  "description": "Chrome Extension to save broser urls to collated.net",
+  "description": "Chrome Extension to save browser urls to collated.net",
   "background":
   {},
   "browser_action": {
