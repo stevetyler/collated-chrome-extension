@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
         currentWindow: true
       }, function(tab) {
         urlbox.value = tab[0].url;
+        urltitlebox.value = tab[0].title;
       });
     }
     else {
