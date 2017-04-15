@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
       http.open('POST', 'http://localhost:3000/api/v1/items/chrome', true);
     }
     else {
-      http.open('POST', 'https://collated.net/api/v1/items/chrome', true);
+      http.open('POST', 'https://app.collated.net/api/v1/items/chrome', true);
     }
 
   	http.setRequestHeader('Access-Control-Allow-Headers', '*');
