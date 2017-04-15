@@ -1,6 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', function() {
-  var isTest = true;
+  var isTest = false;
 
   var submitbutton = document.getElementById('submitbutton'),
       loginblock = document.getElementById('loginblock'),
