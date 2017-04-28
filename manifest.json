@@ -2,12 +2,14 @@
   "name": "Collated",
   "version": "1.12",
   "description": "Chrome Extension to save browser urls to collated.net",
-  "background":
-  {},
+  "background": {},
   "browser_action": {
     "default_popup": "popup.html",
     "default_icon": "icons/icon128.png"
   },
+  "externally_connectable": {
+    "matches": ["*://*.collated.net/*", "*://*.collated-dev.net/*"]
+  },
   "manifest_version": 2,
-  "permissions": ["tabs", "*://*.collated.net/*"]
+  "permissions": ["tabs", "*://*.collated.net/*", "*://*.collated-dev.net/*"]
 }

@@ -11,15 +11,21 @@ document.addEventListener('DOMContentLoaded', function() {
       //email = document.getElementById('email'),
       submitcurrent = document.getElementById('submitcurrent'),
       submitall = document.getElementById('submitall'),
-      token = chrome.storage.local.getItem('collatedToken'),
+      token = localStorage.getItem('collatedToken'),
       urlbox = document.getElementById('url'),
       urltitlebox = document.getElementById('urltitle'),
       serverresponse = document.getElementById('serverresponse');
 
 
-  chrome.runtime.onMessage.addListener(function(obj) {
+  // chrome.runtime in Chrome 26, use chrome.extension for Chrome 20-25
+  var runtimeOrExtension = chrome.runtime && chrome.runtime.sendMessage ?
+                           'runtime' : 'extension';
+
+  chrome[runtimeOrExtension].onMessageExternal.addListener(function(obj) {
+    console.log('response from extension');
     if (!token) {
-      chrome.storage.local.setItem({
+      // check compatibility
+      localStorage.setItem({
         'collatedToken': obj.token
         }, function() {
          console.log("Token stored : " + obj.token);
