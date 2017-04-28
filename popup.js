@@ -5,35 +5,24 @@ document.addEventListener('DOMContentLoaded', function() {
   var submitbutton = document.getElementById('submitbutton'),
       loginblock = document.getElementById('loginblock'),
       afterloginblock = document.getElementById('afterloginblock'),
+      collatedlink = document.getElementById('collatedlink'),
       error = document.getElementById('error'),
       urlerror = document.getElementById('error'),
       username = document.getElementById('username'),
-      //email = document.getElementById('email'),
       submitcurrent = document.getElementById('submitcurrent'),
       submitall = document.getElementById('submitall'),
-      //token = localStorage.getItem('collatedToken'),
+      token = localStorage.getItem('collatedToken'),
       urlbox = document.getElementById('url'),
       urltitlebox = document.getElementById('urltitle'),
       serverresponse = document.getElementById('serverresponse');
 
-
   // chrome.runtime in Chrome 26, use chrome.extension for Chrome 20-25
-  var runtimeOrExtension = chrome.runtime && chrome.runtime.sendMessage ?
-                           'runtime' : 'extension';
+  var runtimeOrExtension = chrome.runtime && chrome.runtime.sendMessage ? 'runtime' : 'extension';
 
   chrome[runtimeOrExtension].onMessageExternal.addListener(function(obj) {
-    var token = localStorage.getItem('collatedToken');
-    console.log('response from extension', obj);
-    console.log('local token found', token);
     if (!token) {
-      console.log('saving token');
-      console.log('username', localStorage.getItem('username'));
       // check compatibility
-      localStorage.setItem({
-        'collatedToken': obj.token
-        }, function() {
-         console.log("Token stored : " + localStorage.getItem('collatedToken'));
-      });
+      localStorage.setItem('collatedToken', obj.token);
     }
     return {};
   });
@@ -109,6 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (collatedusername && collatedusername.length > 0) {
       loginblock.style.display = "none";
       afterloginblock.style.display = "block";
+      collatedlink.href = 'https://app.collated.net/' + collatedusername;
       return true;
     }
     else {
@@ -122,11 +112,11 @@ document.addEventListener('DOMContentLoaded', function() {
     serverresponse.innerHTML = "";
     //var collatedemail = localStorage.getItem("collatedemail");
     var collatedusername = localStorage.getItem("collatedusername");
+    var token = localStorage.getItem('collatedToken');
     var http = new XMLHttpRequest();
 
     var obj = {
-      //email: collatedemail,
-      token: localStorage.getItem('collatedToken'),
+      token: token,
       urlarr: urlarr,
       titlearr: titlearr,
       username: collatedusername

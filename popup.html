@@ -1,12 +1,11 @@
 <html>
   <head>
     <title>Collated.net Chrome Extension</title>
-    <!-- <script type="text/javascript" src="background.js"></script> -->
     <script type="text/javascript" src="popup.js"></script>
     <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
   </head>
 
-  <h1>collated</h1>
+  <h1><a id="collatedlink">collated</a></h1>
   <div id="loginblock" class="login-block">
     <input type="text" placeholder="Enter username" id="username" autocomplete="off" />
     <!-- <input type="text" value="" placeholder="Email" id="email" autocomplete="off" /> -->
@@ -21,8 +20,10 @@
     <input type="text" value="" tabIndex="-1" placeholder="Title" id="urltitle" />
 	  <p id="urlerror"></p>
     <button id="submitcurrent" tabIndex="-1">Save Current Tab</button>
-    </br>
-    <button id="submitall" tabIndex="-1">Save All Tabs</button>
+    <!-- <br/>
+    <button id="submitall" tabIndex="-1">Save All Tabs</button> -->
+    <br/>
+
     <p id="errorurl"></p>
     <div id="serverresponse"></div>
   </div>
@@ -140,6 +141,12 @@
       height : 20px;
       margin:0;
       font-weight:bold;
+    }
+
+    a:link, a:active, a:hover, a:focus, a:visited {
+      color: white;
+      outline: none;
+      text-decoration: none;
     }
 
   </style>
