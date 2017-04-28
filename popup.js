@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
       //email = document.getElementById('email'),
       submitcurrent = document.getElementById('submitcurrent'),
       submitall = document.getElementById('submitall'),
-      token = localStorage.getItem('collatedToken'),
+      //token = localStorage.getItem('collatedToken'),
       urlbox = document.getElementById('url'),
       urltitlebox = document.getElementById('urltitle'),
       serverresponse = document.getElementById('serverresponse');
@@ -22,15 +22,20 @@ document.addEventListener('DOMContentLoaded', function() {
                            'runtime' : 'extension';
 
   chrome[runtimeOrExtension].onMessageExternal.addListener(function(obj) {
-    console.log('response from extension');
+    var token = localStorage.getItem('collatedToken');
+    console.log('response from extension', obj);
+    console.log('local token found', token);
     if (!token) {
+      console.log('saving token');
+      console.log('username', localStorage.getItem('username'));
       // check compatibility
       localStorage.setItem({
         'collatedToken': obj.token
         }, function() {
-         console.log("Token stored : " + obj.token);
+         console.log("Token stored : " + localStorage.getItem('collatedToken'));
       });
     }
+    return {};
   });
 
   serverresponse.innerHTML = "";
@@ -99,9 +104,9 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   function checkcredentials() {
-    var collatedemail = localStorage.getItem("collatedemail");
+    //var collatedemail = localStorage.getItem("collatedemail");
     var collatedusername = localStorage.getItem("collatedusername");
-    if (collatedemail && collatedusername && collatedemail.length > 0 && collatedusername.length > 0) {
+    if (collatedusername && collatedusername.length > 0) {
       loginblock.style.display = "none";
       afterloginblock.style.display = "block";
       return true;
@@ -115,12 +120,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function sendTabToServer(urlarr, titlearr) {
     serverresponse.innerHTML = "";
-    var collatedemail = localStorage.getItem("collatedemail");
+    //var collatedemail = localStorage.getItem("collatedemail");
     var collatedusername = localStorage.getItem("collatedusername");
     var http = new XMLHttpRequest();
 
     var obj = {
-      email: collatedemail,
+      //email: collatedemail,
+      token: localStorage.getItem('collatedToken'),
       urlarr: urlarr,
       titlearr: titlearr,
       username: collatedusername
