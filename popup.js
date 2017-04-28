@@ -1,6 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', function() {
-  var isTest = false;
+  var isTest = true;
 
   var submitbutton = document.getElementById('submitbutton'),
       loginblock = document.getElementById('loginblock'),
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
       urlerror = document.getElementById('error'),
       username = document.getElementById('username'),
       submitcurrent = document.getElementById('submitcurrent'),
-      submitall = document.getElementById('submitall'),
+      //submitall = document.getElementById('submitall'),
       token = localStorage.getItem('collatedToken'),
       urlbox = document.getElementById('url'),
       urltitlebox = document.getElementById('urltitle'),
@@ -20,11 +20,11 @@ document.addEventListener('DOMContentLoaded', function() {
   var runtimeOrExtension = chrome.runtime && chrome.runtime.sendMessage ? 'runtime' : 'extension';
 
   chrome[runtimeOrExtension].onMessageExternal.addListener(function(obj) {
+    //console.log('obj received', obj);
     if (!token) {
       // check compatibility
       localStorage.setItem('collatedToken', obj.token);
     }
-    return {};
   });
 
   serverresponse.innerHTML = "";
@@ -74,23 +74,23 @@ document.addEventListener('DOMContentLoaded', function() {
 	  }
   });
 
-  submitall.addEventListener('click', function() {
-    if (checkcredentials()) {
-      chrome.tabs.getAllInWindow(null, function(tabs) {
-        var urlarr = [];
-        var titlearr = [];
-
-        for (var i = 0; i < tabs.length; i++) {
-          urlarr.push(tabs[i].url);
-          titlearr.push(tabs[i].title);
-        }
-        sendTabToServer(urlarr, titlearr);
-      });
-    }
-    else {
-      error.innerHTML = "Please enter your credentials.";
-    }
-  });
+  // submitall.addEventListener('click', function() {
+  //   if (checkcredentials()) {
+  //     chrome.tabs.getAllInWindow(null, function(tabs) {
+  //       var urlarr = [];
+  //       var titlearr = [];
+  //
+  //       for (var i = 0; i < tabs.length; i++) {
+  //         urlarr.push(tabs[i].url);
+  //         titlearr.push(tabs[i].title);
+  //       }
+  //       sendTabToServer(urlarr, titlearr);
+  //     });
+  //   }
+  //   else {
+  //     error.innerHTML = "Please enter your credentials.";
+  //   }
+  // });
 
   function checkcredentials() {
     //var collatedemail = localStorage.getItem("collatedemail");
@@ -123,6 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     var jsonString = JSON.stringify(obj);
+    console.log('obj', jsonString);
 
     if (isTest) {
       http.open('POST', 'http://localhost:3000/api/v1/items/chrome', true);
@@ -143,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
   			}, 3000);
 		  }
       else {
-			   serverresponse.innerHTML= "<p  class='serverresponsered'>Failed to save. Please try again or contact support@collated.net</>";
+			   serverresponse.innerHTML= "<p  class='serverresponsered'>Failed to save. Please log in and try again or contact support@collated.net</>";
 		  }
 	  };
     http.send(jsonString);
