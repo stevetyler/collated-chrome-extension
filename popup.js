@@ -1,6 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', function() {
-  var isTest = false;
+  var isTest = true;
 
   var submitbutton = document.getElementById('submitbutton'),
       loginblock = document.getElementById('loginblock'),
@@ -8,12 +8,24 @@ document.addEventListener('DOMContentLoaded', function() {
       error = document.getElementById('error'),
       urlerror = document.getElementById('error'),
       username = document.getElementById('username'),
-      email = document.getElementById('email'),
+      //email = document.getElementById('email'),
       submitcurrent = document.getElementById('submitcurrent'),
       submitall = document.getElementById('submitall'),
+      token = chrome.storage.local.getItem('collatedToken'),
       urlbox = document.getElementById('url'),
       urltitlebox = document.getElementById('urltitle'),
       serverresponse = document.getElementById('serverresponse');
+
+
+  document.addEventListener('runtime.onMessage', function(obj) {
+    if (!token) {
+      chrome.storage.local.setItem({
+        'collatedToken': obj.token
+        }, function() {
+         console.log("Token stored : " + obj.token);
+      });
+    }
+  });
 
   serverresponse.innerHTML = "";
 
@@ -28,11 +40,11 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   submitbutton.addEventListener('click', function() {
-    if (username.value.length > 0 && email.value.length > 0) {
+    if (username.value.length > 0) {
       error.innerHTML = "";
       loginblock.style.display = "none";
       afterloginblock.style.display = "block";
-      localStorage.setItem("collatedemail", email.value);
+      //localStorage.setItem("collatedemail", email.value);
       localStorage.setItem("collatedusername", username.value);
       chrome.tabs.query({
         active: true,
@@ -43,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
     else {
-      error.innerHTML = "Please enter your credentials.";
+      error.innerHTML = "Please enter your username.";
     }
   });
 
