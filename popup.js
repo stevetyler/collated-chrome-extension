@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
       serverresponse = document.getElementById('serverresponse');
 
 
-  document.addEventListener('runtime.onMessage', function(obj) {
+  chrome.runtime.onMessage.addListener(function(obj) {
     if (!token) {
       chrome.storage.local.setItem({
         'collatedToken': obj.token
