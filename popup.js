@@ -45,6 +45,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
+<<<<<<< HEAD
+=======
+  // check for token
+>>>>>>> 351ec055bf1923ca370fdbec17f2ec86716988a2
   if (checkauthenticated()) {
     chrome.tabs.query({
       active: true,
