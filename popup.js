@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // chrome.runtime in Chrome 26, use chrome.extension for Chrome 20-25
   //var runtimeOrExtension = chrome.runtime && chrome.runtime.sendMessage ? 'runtime' : 'extension';
 
+  // receive from tab id?
   chrome.runtime.onMessageExternal.addListener(function(msg) {
     console.log('token in localStorage', msg.token);
     if (!token) {
@@ -31,7 +32,47 @@ document.addEventListener('DOMContentLoaded', function() {
 
   serverresponse.innerHTML = "";
 
-  if (checkcredentials()) {
+
+  function checkauthenticated() {
+    var token = localStorage.getItem('collatedToken');
+
+    if (token) {
+      loginblock.style.display = "none";
+      afterloginblock.style.display = "block";
+
+      return true;
+    }
+    else {
+      loginblock.style.display = "block";
+      afterloginblock.style.display = "none";
+      return false;
+    }
+  }
+
+
+
+  function checkcredentials() {
+    //var collatedemail = localStorage.getItem("collatedemail");
+    var collatedusername = localStorage.getItem("collatedusername");
+    if (collatedusername && collatedusername.length > 0) {
+      loginblock.style.display = "none";
+      afterloginblock.style.display = "block";
+      collatedlink.href = 'https://app.collated.net/' + collatedusername;
+      // chrome.tabs.update({
+      //   url: 'https://app.collated.net/' + collatedusername
+      // });
+      return true;
+    }
+    else {
+      loginblock.style.display = "block";
+      afterloginblock.style.display = "none";
+      return false;
+    }
+  }
+
+
+  // check for token
+  if (checkauthenticated()) {
     chrome.tabs.query({
       active: true,
       currentWindow: true
@@ -40,6 +81,12 @@ document.addEventListener('DOMContentLoaded', function() {
       urltitlebox.value = tab[0].title;
    });
   }
+
+  authenticatebutton.addEventListener('click', function() {
+
+
+    
+  });
 
   submitbutton.addEventListener('click', function() {
     if (username.value.length > 0) {
@@ -94,24 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  function checkcredentials() {
-    //var collatedemail = localStorage.getItem("collatedemail");
-    var collatedusername = localStorage.getItem("collatedusername");
-    if (collatedusername && collatedusername.length > 0) {
-      loginblock.style.display = "none";
-      afterloginblock.style.display = "block";
-      collatedlink.href = 'https://app.collated.net/' + collatedusername;
-      // chrome.tabs.update({
-      //   url: 'https://app.collated.net/' + collatedusername
-      // });
-      return true;
-    }
-    else {
-      loginblock.style.display = "block";
-      afterloginblock.style.display = "none";
-      return false;
-    }
-  }
+
 
   function sendTabToServer(urlarr, titlearr) {
     serverresponse.innerHTML = "";
