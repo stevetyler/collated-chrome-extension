@@ -17,8 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
       serverresponse = document.getElementById('serverresponse');
 
       document.getElementById('token').innerHTML = 'token found ' + token;
-  // chrome.runtime in Chrome 26, use chrome.extension for Chrome 20-25
-  //var runtimeOrExtension = chrome.runtime && chrome.runtime.sendMessage ? 'runtime' : 'extension';
 
   // receive from tab id?
   chrome.runtime.onMessageExternal.addListener(function(msg) {
@@ -32,14 +30,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
   serverresponse.innerHTML = "";
 
-
   function checkauthenticated() {
     var token = localStorage.getItem('collatedToken');
 
     if (token) {
       loginblock.style.display = "none";
       afterloginblock.style.display = "block";
-
       return true;
     }
     else {
@@ -49,6 +45,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
+  // check for token
+  if (checkauthenticated()) {
+    chrome.tabs.query({
+      active: true,
+      currentWindow: true
+    }, function(tab) {
+      urlbox.value = tab[0].url;
+      urltitlebox.value = tab[0].title;
+   });
+  }
+
+  authenticatebutton.addEventListener('click', function() {
+    chrome.tabs.update({
+      url: 'http://www.collated-dev.net/'
+    });
+
+    // updated text - 'redirecting to Collated please wait'
+  });
 
 
   function checkcredentials() {
@@ -70,43 +84,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-
-  // check for token
-  if (checkauthenticated()) {
-    chrome.tabs.query({
-      active: true,
-      currentWindow: true
-    }, function(tab) {
-      urlbox.value = tab[0].url;
-      urltitlebox.value = tab[0].title;
-   });
-  }
-
-  authenticatebutton.addEventListener('click', function() {
-
-
-    
-  });
-
-  submitbutton.addEventListener('click', function() {
-    if (username.value.length > 0) {
-      error.innerHTML = "";
-      loginblock.style.display = "none";
-      afterloginblock.style.display = "block";
-      //localStorage.setItem("collatedemail", email.value);
-      localStorage.setItem("collatedusername", username.value);
-      chrome.tabs.query({
-        active: true,
-        currentWindow: true
-      }, function(tab) {
-        urlbox.value = tab[0].url;
-        urltitlebox.value = tab[0].title;
-      });
-    }
-    else {
-      error.innerHTML = "Please enter your username.";
-    }
-  });
+  // submitbutton.addEventListener('click', function() {
+  //   if (username.value.length > 0) {
+  //     error.innerHTML = "";
+  //     loginblock.style.display = "none";
+  //     afterloginblock.style.display = "block";
+  //     //localStorage.setItem("collatedemail", email.value);
+  //     localStorage.setItem("collatedusername", username.value);
+  //     chrome.tabs.query({
+  //       active: true,
+  //       currentWindow: true
+  //     }, function(tab) {
+  //       urlbox.value = tab[0].url;
+  //       urltitlebox.value = tab[0].title;
+  //     });
+  //   }
+  //   else {
+  //     error.innerHTML = "Please enter your username.";
+  //   }
+  // });
 
   submitcurrent.addEventListener('click', function() {
     if (urlbox.value.length > 0) {
