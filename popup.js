@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function() {
   var isTest = true;
 
@@ -19,16 +20,13 @@ document.addEventListener('DOMContentLoaded', function() {
   // chrome.runtime in Chrome 26, use chrome.extension for Chrome 20-25
   //var runtimeOrExtension = chrome.runtime && chrome.runtime.sendMessage ? 'runtime' : 'extension';
 
-
-  chrome.runtime.onMessageExternal.addListener(function(obj) {
-    console.log('obj received');
-    console.log('token in localStorage', token);
+  chrome.runtime.onMessageExternal.addListener(function(msg) {
+    console.log('token in localStorage', msg.token);
     if (!token) {
       // check compatibility
-      localStorage.setItem('collatedToken', obj.token);
+      localStorage.setItem('collatedToken', msg.token);
       console.log('token set', localStorage.getItem('collatedToken'));
     }
-    return {};
   });
 
   serverresponse.innerHTML = "";
@@ -103,6 +101,9 @@ document.addEventListener('DOMContentLoaded', function() {
       loginblock.style.display = "none";
       afterloginblock.style.display = "block";
       collatedlink.href = 'https://app.collated.net/' + collatedusername;
+      // chrome.tabs.update({
+      //   url: 'https://app.collated.net/' + collatedusername
+      // });
       return true;
     }
     else {
