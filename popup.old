@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function() {
   var isTest = true;
 
@@ -10,25 +11,22 @@ document.addEventListener('DOMContentLoaded', function() {
       username = document.getElementById('username'),
       submitcurrent = document.getElementById('submitcurrent'),
       submitall = document.getElementById('submitall'),
-      token = localStorage.getItem('collatedToken'),
+      //token = localStorage.getItem('collatedToken'),
       urlbox = document.getElementById('url'),
       urltitlebox = document.getElementById('urltitle'),
       serverresponse = document.getElementById('serverresponse');
 
-      document.getElementById('token').innerHTML = 'token found ' + token;
   // chrome.runtime in Chrome 26, use chrome.extension for Chrome 20-25
-  //var runtimeOrExtension = chrome.runtime && chrome.runtime.sendMessage ? 'runtime' : 'extension';
+  var runtimeOrExtension = chrome.runtime && chrome.runtime.sendMessage ? 'runtime' : 'extension';
 
+  chrome[runtimeOrExtension].onMessageExternal.addListener(function(obj) {
+    console.log('obj received', obj);
+    localStorage.setItem('collatedToken', obj.token);
+    console.log('token set', localStorage.getItem('collatedToken'));
 
-  chrome.runtime.onMessageExternal.addListener(function(obj) {
-    console.log('obj received');
-    console.log('token in localStorage', token);
-    if (!token) {
+    if (obj.token) {
       // check compatibility
-      localStorage.setItem('collatedToken', obj.token);
-      console.log('token set', localStorage.getItem('collatedToken'));
     }
-    return {};
   });
 
   serverresponse.innerHTML = "";
@@ -127,6 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     var jsonString = JSON.stringify(obj);
+    console.log('obj', jsonString);
 
     if (isTest) {
       http.open('POST', 'http://localhost:3000/api/v1/items/chrome', true);
@@ -147,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
   			}, 3000);
 		  }
       else {
-			   serverresponse.innerHTML= "<p  class='serverresponsered'>Failed to save. Please try again or contact support@collated.net</>";
+			   serverresponse.innerHTML= "<p  class='serverresponsered'>Failed to save. Please log in and try again or contact support@collated.net. Token is " + localStorage.getItem('collatedToken') + "</>";
 		  }
 	  };
     http.send(jsonString);
