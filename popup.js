@@ -2,33 +2,69 @@
 document.addEventListener('DOMContentLoaded', function() {
   var isTest = true;
 
-  var submitbutton = document.getElementById('submitbutton'),
-      loginblock = document.getElementById('loginblock'),
-      afterloginblock = document.getElementById('afterloginblock'),
+  var afterloginblock = document.getElementById('afterloginblock'),
+      authresponse = document.getElementById('authresponse'),
       collatedlink = document.getElementById('collatedlink'),
-      error = document.getElementById('error'),
-      urlerror = document.getElementById('error'),
-      username = document.getElementById('username'),
+      loginblock = document.getElementById('loginblock'),
+      postresponse = document.getElementById('postresponse'),
+      submitbutton = document.getElementById('submitbutton'),
       submitcurrent = document.getElementById('submitcurrent'),
       submitall = document.getElementById('submitall'),
       token = localStorage.getItem('collatedToken'),
       urlbox = document.getElementById('url'),
-      urltitlebox = document.getElementById('urltitle'),
-      serverresponse = document.getElementById('serverresponse');
+      urlerror = document.getElementById('urlerror'),
+      urltitlebox = document.getElementById('urltitle');
 
-      document.getElementById('token').innerHTML = 'token found ' + token;
-
-  // receive from tab id?
   chrome.runtime.onMessageExternal.addListener(function(msg) {
     console.log('token in localStorage', msg.token);
     if (!token) {
-      // check compatibility
       localStorage.setItem('collatedToken', msg.token);
       console.log('token set', localStorage.getItem('collatedToken'));
     }
   });
 
-  serverresponse.innerHTML = "";
+  authenticatebutton.addEventListener('click', function() {
+    authenticatebutton.innerHTML = 'Authenticating, please wait..';
+    chrome.tabs.update({
+      url: isTest ? 'http://www.collated-dev.net/' : 'https://app.collated.net/'
+    });
+
+    setTimeout(function() {
+      if (!localStorage.getItem('collatedToken')) {
+        authresponse.innerHTML = "<p class='error'>Please log in to Collated and try again</p>";
+        authenticatebutton.innerHTML = 'Click to authenticate';
+      }
+      else {
+        authresponse.innerHTML = "<p class='success'>Authentication successful</p>";
+        setTimeout(function() {
+          window.close();
+        }, 2000);
+      }
+    }, 8000);
+  });
+
+  submitcurrent.addEventListener('click', function() {
+    if (urlbox.value.length > 0) {
+      sendToServer([urlbox.value], [urltitlebox.value]);
+    }
+    else {
+      console.log('url should not be empty');
+      postresponse.innerHTML = "<p class='error'>Blank URL, please try again</p>";
+    }
+  });
+
+  submitall.addEventListener('click', function() {
+    chrome.tabs.getAllInWindow(null, function(tabs) {
+      var urlarr = [];
+      var titlearr = [];
+
+      for (var i = 0; i < tabs.length; i++) {
+        urlarr.push(tabs[i].url);
+        titlearr.push(tabs[i].title);
+      }
+      sendToServer(urlarr, titlearr);
+    });
+  });
 
   function checkauthenticated() {
     var token = localStorage.getItem('collatedToken');
@@ -36,112 +72,19 @@ document.addEventListener('DOMContentLoaded', function() {
     if (token) {
       loginblock.style.display = "none";
       afterloginblock.style.display = "block";
+
       return true;
     }
     else {
       loginblock.style.display = "block";
       afterloginblock.style.display = "none";
+
       return false;
     }
   }
 
-  if (checkauthenticated()) {
-    chrome.tabs.query({
-      active: true,
-      currentWindow: true
-    }, function(tab) {
-      urlbox.value = tab[0].url;
-      urltitlebox.value = tab[0].title;
-   });
-  }
-
-  authenticatebutton.addEventListener('click', function() {
-    chrome.tabs.update({
-      url: 'http://www.collated-dev.net/'
-    });
-
-    // updated text - 'redirecting to Collated please wait'
-  });
-
-
-  function checkcredentials() {
-    //var collatedemail = localStorage.getItem("collatedemail");
-    var collatedusername = localStorage.getItem("collatedusername");
-    if (collatedusername && collatedusername.length > 0) {
-      loginblock.style.display = "none";
-      afterloginblock.style.display = "block";
-      collatedlink.href = 'https://app.collated.net/' + collatedusername;
-      // chrome.tabs.update({
-      //   url: 'https://app.collated.net/' + collatedusername
-      // });
-      return true;
-    }
-    else {
-      loginblock.style.display = "block";
-      afterloginblock.style.display = "none";
-      return false;
-    }
-  }
-
-  // submitbutton.addEventListener('click', function() {
-  //   if (username.value.length > 0) {
-  //     error.innerHTML = "";
-  //     loginblock.style.display = "none";
-  //     afterloginblock.style.display = "block";
-  //     //localStorage.setItem("collatedemail", email.value);
-  //     localStorage.setItem("collatedusername", username.value);
-  //     chrome.tabs.query({
-  //       active: true,
-  //       currentWindow: true
-  //     }, function(tab) {
-  //       urlbox.value = tab[0].url;
-  //       urltitlebox.value = tab[0].title;
-  //     });
-  //   }
-  //   else {
-  //     error.innerHTML = "Please enter your username.";
-  //   }
-  // });
-
-  submitcurrent.addEventListener('click', function() {
-    if (urlbox.value.length > 0) {
-      if (checkcredentials()) {
-        sendTabToServer([urlbox.value], [urltitlebox.value]);
-        urlerror.innerHTML = "";
-      }
-      else {
-        error.innerHTML = "Please enter your credentials.";
-      }
-    }
-    else {
-      urlerror.innerHTML = "URL should not be empty.";
-	  }
-  });
-
-  submitall.addEventListener('click', function() {
-    if (checkcredentials()) {
-      chrome.tabs.getAllInWindow(null, function(tabs) {
-        var urlarr = [];
-        var titlearr = [];
-
-        for (var i = 0; i < tabs.length; i++) {
-          urlarr.push(tabs[i].url);
-          titlearr.push(tabs[i].title);
-        }
-        sendTabToServer(urlarr, titlearr);
-      });
-    }
-    else {
-      error.innerHTML = "Please enter your credentials.";
-    }
-  });
-
-
-
-  function sendTabToServer(urlarr, titlearr) {
-    serverresponse.innerHTML = "";
-    //var collatedemail = localStorage.getItem("collatedemail");
-    var collatedusername = localStorage.getItem("collatedusername");
+  function sendToServer(urlarr, titlearr) {
+    postresponse.innerHTML = "";
     var token = localStorage.getItem('collatedToken');
     var http = new XMLHttpRequest();
 
@@ -149,7 +92,6 @@ document.addEventListener('DOMContentLoaded', function() {
       token: token,
       urlarr: urlarr,
       titlearr: titlearr,
-      username: collatedusername
     };
 
     var jsonString = JSON.stringify(obj);
@@ -164,18 +106,28 @@ document.addEventListener('DOMContentLoaded', function() {
   	http.setRequestHeader('Access-Control-Allow-Headers', '*');
   	http.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
   	http.onreadystatechange = function() {
-      if (http.readyState == 4 && http.status == 200) {
-        urlbox.value="";
-        urltitlebox.value="";
-        serverresponse.innerHTML= "<p class='serverresponsegreen'>Your URL(s) saved successfully.</>";
+      if (http.status == 200) {
+        postresponse.innerHTML= "<p class='success'>Save successful<p/>";
         setTimeout(function() {
-          serverresponse.innerHTML="";
-  			}, 3000);
+          postresponse.innerHTML="";
+  			}, 2000);
 		  }
       else {
-			   serverresponse.innerHTML= "<p  class='serverresponsered'>Failed to save. Please try again or contact support@collated.net</>";
+			   postresponse.innerHTML= "<p class='error'>Failed to save. Please try again or contact support@collated.net<p/>";
 		  }
 	  };
     http.send(jsonString);
+  }
+
+  checkauthenticated();
+
+  if (token) {
+    chrome.tabs.query({
+      active: true,
+      currentWindow: true
+    }, function(tab) {
+      urlbox.value = tab[0].url;
+      urltitlebox.value = tab[0].title;
+   });
   }
 });
