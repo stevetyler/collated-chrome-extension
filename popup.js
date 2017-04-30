@@ -1,19 +1,19 @@
 
 document.addEventListener('DOMContentLoaded', function() {
-  var isTest = false;
+  var isTest = true;
 
-  var afterloginblock = document.getElementById('afterloginblock'),
-      authresponse = document.getElementById('authresponse'),
-      collatedlink = document.getElementById('collatedlink'),
-      loginblock = document.getElementById('loginblock'),
-      postresponse = document.getElementById('postresponse'),
-      submitbutton = document.getElementById('submitbutton'),
-      submitcurrent = document.getElementById('submitcurrent'),
-      submitall = document.getElementById('submitall'),
+  var afterLoginBlock = document.getElementById('afterLoginBlock'),
+      authResponse = document.getElementById('authResponse'),
+      collatedLink = document.getElementById('collatedLink'),
+      loginBlock = document.getElementById('loginBlock'),
+      postResponse = document.getElementById('postResponse'),
+      submitButton = document.getElementById('submitButton'),
+      submitCurrent = document.getElementById('submitCurrent'),
+      submitAll = document.getElementById('submitAll'),
       token = localStorage.getItem('collatedToken'),
-      urlbox = document.getElementById('url'),
-      urlerror = document.getElementById('urlerror'),
-      urltitlebox = document.getElementById('urltitle');
+      urlBox = document.getElementById('url'),
+      urlError = document.getElementById('urlError'),
+      urlTitleBox = document.getElementById('urlTitle');
 
   chrome.runtime.onMessageExternal.addListener(function(msg) {
     console.log('token in localStorage', msg.token);
@@ -23,19 +23,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  authenticatebutton.addEventListener('click', function() {
-    authenticatebutton.innerHTML = 'Authenticating, please wait..';
+  authenticateButton.addEventListener('click', function() {
+    authenticateButton.innerHTML = 'Authenticating, please wait..';
     chrome.tabs.update({
       url: isTest ? 'http://www.collated-dev.net/' : 'https://app.collated.net/'
     });
 
     setTimeout(function() {
       if (!localStorage.getItem('collatedToken')) {
-        authresponse.innerHTML = "<p class='error'>Please log in to Collated and try again</p>";
-        authenticatebutton.innerHTML = 'Click to authenticate';
+        authResponse.innerHTML = "<p class='error'>Please log in to Collated and try again</p>";
+        authenticateButton.innerHTML = 'Click to authenticate';
       }
       else {
-        authresponse.innerHTML = "<p class='success'>Authentication successful</p>";
+        authResponse.innerHTML = "<p class='success'>Authentication successful</p>";
         setTimeout(function() {
           window.close();
         }, 2000);
@@ -43,55 +43,55 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 8000);
   });
 
-  submitcurrent.addEventListener('click', function() {
-    if (urlbox.value.length > 0) {
-      sendToServer([urlbox.value], [urltitlebox.value]);
+  submitCurrent.addEventListener('click', function() {
+    if (urlBox.value.length > 0) {
+      sendToServer([urlBox.value], [urlTitleBox.value]);
     }
     else {
       console.log('url should not be empty');
-      postresponse.innerHTML = "<p class='error'>Blank URL, please try again</p>";
+      postResponse.innerHTML = "<p class='error'>Blank URL, please try again</p>";
     }
   });
 
-  submitall.addEventListener('click', function() {
+  submitAll.addEventListener('click', function() {
     chrome.tabs.getAllInWindow(null, function(tabs) {
-      var urlarr = [];
-      var titlearr = [];
+      var urlArr = [];
+      var titleArr = [];
 
       for (var i = 0; i < tabs.length; i++) {
         urlarr.push(tabs[i].url);
         titlearr.push(tabs[i].title);
       }
-      sendToServer(urlarr, titlearr);
+      sendToServer(urlArr, titleArr);
     });
   });
 
-  function checkauthenticated() {
+  function isAuthenticated() {
     var token = localStorage.getItem('collatedToken');
 
     if (token) {
-      loginblock.style.display = "none";
-      afterloginblock.style.display = "block";
+      loginBlock.style.display = "none";
+      afterLoginBlock.style.display = "block";
 
       return true;
     }
     else {
-      loginblock.style.display = "block";
-      afterloginblock.style.display = "none";
+      loginBlock.style.display = "block";
+      afterLoginBlock.style.display = "none";
 
       return false;
     }
   }
 
-  function sendToServer(urlarr, titlearr) {
-    postresponse.innerHTML = "";
+  function sendToServer(urlArr, titleArr) {
+    postResponse.innerHTML = "";
     var token = localStorage.getItem('collatedToken');
     var http = new XMLHttpRequest();
 
     var obj = {
       token: token,
-      urlarr: urlarr,
-      titlearr: titlearr,
+      urlArr: urlArr,
+      titleArr: titleArr,
     };
 
     var jsonString = JSON.stringify(obj);
@@ -107,27 +107,27 @@ document.addEventListener('DOMContentLoaded', function() {
   	http.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
   	http.onreadystatechange = function() {
       if (http.status == 200) {
-        postresponse.innerHTML= "<p class='success'>Save successful<p/>";
+        postResponse.innerHTML= "<p class='success'>Save successful<p/>";
         setTimeout(function() {
-          postresponse.innerHTML="";
+          postResponse.innerHTML="";
   			}, 2000);
 		  }
       else {
-			   postresponse.innerHTML= "<p class='error'>Failed to save. Please try again or contact support@collated.net<p/>";
+			   postResponse.innerHTML= "<p class='error'>Failed to save. Please try again or contact support@collated.net<p/>";
 		  }
 	  };
     http.send(jsonString);
   }
 
-  checkauthenticated();
+  isAuthenticated();
 
   if (token) {
     chrome.tabs.query({
       active: true,
       currentWindow: true
     }, function(tab) {
-      urlbox.value = tab[0].url;
-      urltitlebox.value = tab[0].title;
+      urlBox.value = tab[0].url;
+      urlTitleBox.value = tab[0].title;
    });
   }
 });
