@@ -1,7 +1,7 @@
 {
   "name": "Collated",
   "version": "1.13",
-  "description": "Chrome Extension to save browser urls to collated.net",
+  "description": "Chrome extension to post browser tab urls to collated.net",
   "background": {},
   "browser_action": {
     "default_popup": "popup.html",

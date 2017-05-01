@@ -1,6 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', function() {
-  var isTest = true;
+  var isDevelopment = true;
 
   var afterLoginBlock = document.getElementById('afterLoginBlock'),
       authResponse = document.getElementById('authResponse'),
@@ -16,17 +16,15 @@ document.addEventListener('DOMContentLoaded', function() {
       urlTitleBox = document.getElementById('urlTitle');
 
   chrome.runtime.onMessageExternal.addListener(function(msg) {
-    console.log('token in localStorage', msg.token);
     if (!token) {
       localStorage.setItem('collatedToken', msg.token);
-      console.log('token set', localStorage.getItem('collatedToken'));
     }
   });
 
   authenticateButton.addEventListener('click', function() {
     authenticateButton.innerHTML = 'Authenticating, please wait..';
     chrome.tabs.update({
-      url: isTest ? 'http://www.collated-dev.net/' : 'https://app.collated.net/'
+      url: isDevelopment ? 'http://www.collated-dev.net/' : 'https://app.collated.net/'
     });
 
     setTimeout(function() {
@@ -48,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function() {
       sendToServer([urlBox.value], [urlTitleBox.value]);
     }
     else {
-      console.log('url should not be empty');
       postResponse.innerHTML = "<p class='error'>Blank URL, please try again</p>";
     }
   });
@@ -96,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var jsonString = JSON.stringify(obj);
 
-    if (isTest) {
+    if (isDevelopment) {
       http.open('POST', 'http://localhost:3000/api/v1/items/chrome', true);
     }
     else {
