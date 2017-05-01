@@ -1,15 +1,14 @@
 
 document.addEventListener('DOMContentLoaded', function() {
-  var isProduction = false;
+  var isProduction = true;
 
   var afterLoginBlock = document.getElementById('afterLoginBlock'),
       authResponse = document.getElementById('authResponse'),
       collatedLink = document.getElementById('collatedLink'),
       loginBlock = document.getElementById('loginBlock'),
       postResponse = document.getElementById('postResponse'),
-      submitButton = document.getElementById('submitButton'),
-      submitCurrent = document.getElementById('submitCurrent'),
       submitAll = document.getElementById('submitAll'),
+      submitCurrent = document.getElementById('submitCurrent'),
       token = localStorage.getItem('collatedToken'),
       urlBox = document.getElementById('url'),
       urlError = document.getElementById('urlError'),
@@ -29,16 +28,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     setTimeout(function() {
       if (!localStorage.getItem('collatedToken')) {
-        authResponse.innerHTML = "<p class='error'>Please log in to Collated and try again</p>";
+        authResponse.innerHTML = "<p class='error'>Please log in to Collated and try again.</p>";
         authenticateButton.innerHTML = 'Click to authenticate';
       }
       else {
+        authenticateButton.innerHTML = 'Complete';
         authResponse.innerHTML = "<p class='success'>Authentication successful</p>";
         setTimeout(function() {
           window.close();
         }, 2000);
       }
     }, 8000);
+  });
+
+  collatedLink.addEventListener('click', function() {
+    chrome.tabs.update({
+      url: isProduction ? 'https://app.collated.net/' : 'http://www.collated-dev.net/'
+    });
   });
 
   submitCurrent.addEventListener('click', function() {
