@@ -4,6 +4,31 @@ chrome.runtime.onMessage.addListener(function(msg) {
   sendToServer(msg.urlArr, msg.titleArr, msg.isProduction);
 });
 
+//subscribe on request from content.js:
+chrome.extension.onRequest.addListener(onRequest);
+
+function onRequest(request, sender, callback){
+   if(request.action == 'createContextMenuItem') {
+     chrome.contextMenus.create({
+       "id": "saveTo",
+       "type": "link",
+       "title": "Save to Collated..",
+       "contexts":["link"],
+       "onclick": saveToCollated
+     });
+   }
+}
+
+function saveToCollated(info, tab) {
+  if (info.menuItemId == "saveTo"){
+    alert("You have selected: " + info.selectionText);
+
+    // chrome.runtime.sendMessage({action:'open_dialog_box'}, function(){});
+    // alert("Req sent?");
+  }
+}
+
+
 function sendToServer(urlArr, titleArr, isProduction) {
   var token = localStorage.getItem('collatedToken');
   var http = new XMLHttpRequest();
