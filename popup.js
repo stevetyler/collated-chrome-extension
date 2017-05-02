@@ -89,9 +89,10 @@ document.addEventListener('DOMContentLoaded', function() {
 // send message to background
   function sendToBackground(urlArr, titleArr) {
 
-
-
-
+    chrome.runtime.sendMessage({
+      urlArr: urlArr,
+      titleArr: titleArr
+    });
   }
 
   // function sendToServer(urlArr, titleArr) {

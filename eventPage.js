@@ -2,11 +2,14 @@
 
 //http://stackoverflow.com/questions/11431337/sending-message-to-chrome-extension-from-a-web-page
 
-//http://stackoverflow.com/questions/14245334/chrome-extension-sendmessage-from-background-to-content-script-doesnt-work
-
 //http://stackoverflow.com/questions/36609128/with-a-chrome-extension-how-do-i-pass-a-message-from-background-script-to-conte
 
 
+chrome.runtime.onMessage.addListener(function(msg) {
+  console.log('message received', msg);
+
+
+});
 
 function sendToServer(urlArr, titleArr) {
   postResponse.innerHTML = "";
