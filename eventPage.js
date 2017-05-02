@@ -1,12 +1,3 @@
-// https://developer.chrome.com/extensions/event_pages
-
-//http://stackoverflow.com/questions/11431337/sending-message-to-chrome-extension-from-a-web-page
-
-//http://stackoverflow.com/questions/36609128/with-a-chrome-extension-how-do-i-pass-a-message-from-background-script-to-conte
-
-//http://stackoverflow.com/questions/3829150/google-chrome-extension-console-log-from-background-page
-
-console.log('script running 2');
 
 chrome.runtime.onMessage.addListener(function(msg) {
   console.log('msg', msg);
