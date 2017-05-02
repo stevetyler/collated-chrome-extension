@@ -1,6 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', function() {
-  var isProduction = true;
+  var isProduction = false;
 
   var afterLoginBlock = document.getElementById('afterLoginBlock'),
       authResponse = document.getElementById('authResponse'),
@@ -13,6 +13,20 @@ document.addEventListener('DOMContentLoaded', function() {
       urlBox = document.getElementById('url'),
       urlError = document.getElementById('urlError'),
       urlTitleBox = document.getElementById('urlTitle');
+
+  chrome.runtime.onMessage.addListener(function(msg) {
+    if (msg.response === "success") {
+      postResponse.innerHTML= "<p class='success'>Save successful<p/>";
+
+      // remove and replace with clear button
+      setTimeout(function() {
+        postResponse.innerHTML="";
+			}, 2000);
+    }
+    else {
+      postResponse.innerHTML= "<p class='error'>Failed to save. Please try again or contact support@collated.net<p/>";
+    }
+  });
 
   chrome.runtime.onMessageExternal.addListener(function(msg) {
     if (!token) {
@@ -34,6 +48,8 @@ document.addEventListener('DOMContentLoaded', function() {
       else {
         authenticateButton.innerHTML = 'Complete';
         authResponse.innerHTML = "<p class='success'>Authentication successful</p>";
+
+        // remove and replace with close button
         setTimeout(function() {
           window.close();
         }, 2000);
@@ -86,14 +102,29 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-// send message to background
   function sendToBackground(urlArr, titleArr) {
-
+    console.log('sendToBackground called');
+    //var port = chrome.runtime.connect({name: "popup"});
     chrome.runtime.sendMessage({
       urlArr: urlArr,
-      titleArr: titleArr
+      titleArr: titleArr,
+      isProduction: isProduction
     });
   }
+
+  isAuthenticated();
+
+  if (token) {
+    chrome.tabs.query({
+      active: true,
+      currentWindow: true
+    }, function(tab) {
+      urlBox.value = tab[0].url;
+      urlTitleBox.value = tab[0].title;
+   });
+  }
+});
+
 
   // function sendToServer(urlArr, titleArr) {
   //   postResponse.innerHTML = "";
@@ -130,16 +161,3 @@ document.addEventListener('DOMContentLoaded', function() {
 	//   };
   //   http.send(jsonString);
   // }
-
-  isAuthenticated();
-
-  if (token) {
-    chrome.tabs.query({
-      active: true,
-      currentWindow: true
-    }, function(tab) {
-      urlBox.value = tab[0].url;
-      urlTitleBox.value = tab[0].title;
-   });
-  }
-});
