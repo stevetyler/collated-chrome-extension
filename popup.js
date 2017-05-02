@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   submitCurrent.addEventListener('click', function() {
     if (urlBox.value.length > 0) {
-      sendToServer([urlBox.value], [urlTitleBox.value]);
+      sendToBackground([urlBox.value], [urlTitleBox.value]);
     }
     else {
       postResponse.innerHTML = "<p class='error'>Blank URL, please try again</p>";
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
         urlArr.push(tabs[i].url);
         titleArr.push(tabs[i].title);
       }
-      sendToServer(urlArr, titleArr);
+      sendToBackground(urlArr, titleArr);
     });
   });
 
@@ -86,41 +86,49 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  function sendToServer(urlArr, titleArr) {
-    postResponse.innerHTML = "";
-    var token = localStorage.getItem('collatedToken');
-    var http = new XMLHttpRequest();
+// send message to background
+  function sendToBackground(urlArr, titleArr) {
 
-    var obj = {
-      token: token,
-      urlArr: urlArr,
-      titleArr: titleArr,
-    };
 
-    var jsonString = JSON.stringify(obj);
 
-    if (isProduction) {
-      http.open('POST', 'https://app.collated.net/api/v1/items/chrome', true);
-    }
-    else {
-      http.open('POST', 'http://localhost:3000/api/v1/items/chrome', true);
-    }
 
-  	http.setRequestHeader('Access-Control-Allow-Headers', '*');
-  	http.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-  	http.onreadystatechange = function() {
-      if (http.status == 200) {
-        postResponse.innerHTML= "<p class='success'>Save successful<p/>";
-        setTimeout(function() {
-          postResponse.innerHTML="";
-  			}, 2000);
-		  }
-      else {
-			   postResponse.innerHTML= "<p class='error'>Failed to save. Please try again or contact support@collated.net<p/>";
-		  }
-	  };
-    http.send(jsonString);
   }
+
+  // function sendToServer(urlArr, titleArr) {
+  //   postResponse.innerHTML = "";
+  //   var token = localStorage.getItem('collatedToken');
+  //   var http = new XMLHttpRequest();
+  //
+  //   var obj = {
+  //     token: token,
+  //     urlArr: urlArr,
+  //     titleArr: titleArr,
+  //   };
+  //
+  //   var jsonString = JSON.stringify(obj);
+  //
+  //   if (isProduction) {
+  //     http.open('POST', 'https://app.collated.net/api/v1/items/chrome', true);
+  //   }
+  //   else {
+  //     http.open('POST', 'http://localhost:3000/api/v1/items/chrome', true);
+  //   }
+  //
+  // 	http.setRequestHeader('Access-Control-Allow-Headers', '*');
+  // 	http.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+  // 	http.onreadystatechange = function() {
+  //     if (http.status == 200) {
+  //       postResponse.innerHTML= "<p class='success'>Save successful<p/>";
+  //       setTimeout(function() {
+  //         postResponse.innerHTML="";
+  // 			}, 2000);
+	// 	  }
+  //     else {
+	// 		   postResponse.innerHTML= "<p class='error'>Failed to save. Please try again or contact support@collated.net<p/>";
+	// 	  }
+	//   };
+  //   http.send(jsonString);
+  // }
 
   isAuthenticated();
 
