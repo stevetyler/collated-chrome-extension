@@ -1,6 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', function() {
-  var isProduction;
+  var isProduction = false;
 
   var afterLoginBlock = document.getElementById('afterLoginBlock'),
       authResponse = document.getElementById('authResponse'),
@@ -15,10 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
       urlTitleBox = document.getElementById('urlTitle');
 
   chrome.runtime.onMessage.addListener(function(msg) {
-    if (msg.isProduction) {
-      isProduction = msg.isProduction;
-    }
-    else if (msg.response === "success") {
+    if (msg.response === "success") {
       postResponse.innerHTML= "<p class='success'>Save successful<p/>";
 
       setTimeout(function() {
@@ -108,11 +105,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function sendToBackground(urlArr, titleArr) {
     console.log('sendToBackground called');
-    //var port = chrome.runtime.connect({name: "popup"});
     chrome.runtime.sendMessage({
       urlArr: urlArr,
       titleArr: titleArr,
-      //isProduction: isProduction
+      isProduction: isProduction
     });
   }
 

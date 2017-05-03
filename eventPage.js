@@ -1,11 +1,7 @@
-var isProduction = false;
 
-chrome.extension.sendMessage({
-  "isProduction": isProduction
-});
 
 chrome.runtime.onMessage.addListener(function(msg) {
-  sendToServer(msg.urlArr, msg.titleArr, msg.isProduction);
+  sendToServer(msg.urlArr, msg.titleArr, 'popup', msg.isProduction);
   return;
 });
 
@@ -20,11 +16,11 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
   var url = info.linkUrl;
   var title = info.selectionText;
 
-  sendToServer([url], [title], false);
+  sendToServer([url], [title], 'contextMenu', false);
   return;
 });
 
-function sendToServer(urlArr, titleArr) {
+function sendToServer(urlArr, titleArr, origin, isProduction) {
   var token = localStorage.getItem('collatedToken');
   var http = new XMLHttpRequest();
 
@@ -53,12 +49,17 @@ function sendToServer(urlArr, titleArr) {
       });
 	  }
     else {
-      //console.log('post error');
-      chrome.runtime.sendMessage({
-        "response": "error"
-      });
-      alert('Error saving link, please contact support@collated.net');
+      if (origin === "popup") {
+        chrome.runtime.sendMessage({
+          "response": "error"
+        });
+      }
+      else {
+        alert('Error saving link, please contact support@collated.net');
+        //console.log('post error');
+      }
 	  }
   };
   http.send(jsonString);
+  return;
 }
