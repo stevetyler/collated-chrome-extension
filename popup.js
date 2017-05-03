@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
       postResponse.innerHTML= "<p class='error'>Failed to save. Please try again or contact support@collated.net<p/>";
     }
     else if (msg.isProduction) {
-      console.log('msg received', msg);
       isProduction = (msg.isProduction === 'true');
     }
   });
