@@ -1,5 +1,7 @@
 var isProduction = false;
 
+// check error running contextMenus.create: Cannot create item with duplicate id saveTo
+
 chrome.extension.onMessage.addListener(function(msg) {
   if (msg.query === 'isProduction') {
     chrome.extension.sendMessage({
@@ -61,7 +63,19 @@ function sendToServer(urlArr, titleArr, origin) {
         });
       }
       else {
-        alert('Error saving link, please contact support@collated.net');
+        chrome.tabs.create({
+          url: chrome.extension.getURL('openDialog.html'),
+          active: false
+        }, function(tab) {
+          chrome.windows.create({
+            tabId: tab.id,
+            type: 'popup',
+            focused: true,
+            top: 100,
+            height: 150,
+            width: 300
+          });
+        });
       }
 	  }
   };
