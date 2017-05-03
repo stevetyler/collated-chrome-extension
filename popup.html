@@ -6,12 +6,12 @@
   </head>
 
   <h1><a id="collatedLink">collated</a></h1>
-  <div id="loginBlock" class="login-block">
+  <div id="authBlock" class="auth-block">
     <button id="authenticateButton" tabIndex="-1">Click to authenticate</button>
   	<p id="authResponse"></p>
   </div>
 
-  <div id="afterLoginBlock" style="display:none" class="afterLoginBlock">
+  <div id="afterAuthBlock" style="display:none" class="afterAuthBlock">
     <label>Link</label>
     <input type="text" value="" tabIndex="-1" placeholder="Enter url here" id="url" />
 
@@ -50,7 +50,7 @@
       font-size: 14px;
     }
 
-    .login-block {
+    .auth-block {
       width: 250px;
       height: 100px;
       padding: 20px;
@@ -58,7 +58,7 @@
       margin: 0 auto;
     }
 
-    .afterLoginBlock {
+    .afterAuthBlock {
       position: relative;
       width: 250px;
       height: 305px;
@@ -67,7 +67,7 @@
       margin: 0 auto;
     }
 
-    .login-block h1, .afterLoginBlock h1 {
+    .auth-block h1, .afterAuthBlock h1 {
       color: #000;
       font-size: 18px;
       text-transform: uppercase;
@@ -75,7 +75,7 @@
       margin-bottom: 20px;
     }
 
-    .login-block input, .afterLoginBlock input {
+    .auth-block input, .afterAuthBlock input {
       width: 100%;
       height: 42px;
       box-sizing: border-box;
@@ -88,11 +88,11 @@
       color: #666;
     }
 
-    .login-block input:active, .login-block input:focus {
+    .auth-block input:active, .auth-block input:focus {
       border: 1px solid #858585;
     }
 
-    .login-block button, .afterLoginBlock button {
+    .auth-block button, .afterAuthBlock button {
       width: 100%;
       height: 40px;
       background:#858585;;
@@ -106,11 +106,11 @@
     	margin-top: 20px;
     }
 
-    .login-block button:hover, .login-block button:focus {
+    .auth-block button:hover, .auth-block button:focus {
       background-color:#555;
     }
 
-    .afterLoginBlock button:hover, .afterLoginBlock button:focus {
+    .afterAuthBlock button:hover, .afterAuthBlock button:focus {
       background-color:#555;
     }
 

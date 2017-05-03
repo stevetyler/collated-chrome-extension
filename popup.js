@@ -2,10 +2,10 @@
 document.addEventListener('DOMContentLoaded', function() {
   var isProduction;
 
-  var afterLoginBlock = document.getElementById('afterLoginBlock'),
+  var afterAuthBlock = document.getElementById('afterAuthBlock'),
       authResponse = document.getElementById('authResponse'),
       collatedLink = document.getElementById('collatedLink'),
-      loginBlock = document.getElementById('loginBlock'),
+      authBlock = document.getElementById('authBlock'),
       postResponse = document.getElementById('postResponse'),
       submitAll = document.getElementById('submitAll'),
       submitCurrent = document.getElementById('submitCurrent'),
@@ -92,14 +92,14 @@ document.addEventListener('DOMContentLoaded', function() {
     var token = localStorage.getItem('collatedToken');
 
     if (token) {
-      loginBlock.style.display = "none";
-      afterLoginBlock.style.display = "block";
+      authBlock.style.display = "none";
+      afterAuthBlock.style.display = "block";
 
       return true;
     }
     else {
-      loginBlock.style.display = "block";
-      afterLoginBlock.style.display = "none";
+      authBlock.style.display = "block";
+      afterAuthBlock.style.display = "none";
 
       return false;
     }
