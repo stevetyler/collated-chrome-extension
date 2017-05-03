@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
       urlError = document.getElementById('urlError'),
       urlTitleBox = document.getElementById('urlTitle');
 
-  chrome.runtime.onMessage.addListener(function(msg) {
+  chrome.extension.onMessage.addListener(function(msg) {
     if (msg.response === "success") {
       postResponse.innerHTML= "<p class='success'>Save successful<p/>";
 
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // move to background?
-  chrome.runtime.onMessageExternal.addListener(function(msg) {
+  chrome.extension.onMessageExternal.addListener(function(msg) {
     if (!token) {
       localStorage.setItem('collatedToken', msg.token);
     }
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function sendToBackground(urlArr, titleArr) {
     console.log('sendToBackground called');
-    chrome.runtime.sendMessage({
+    chrome.extension.sendMessage({
       urlArr: urlArr,
       titleArr: titleArr,
       isProduction: isProduction

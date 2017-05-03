@@ -1,6 +1,8 @@
 
 
-chrome.runtime.onMessage.addListener(function(msg) {
+
+
+chrome.extension.onMessage.addListener(function(msg) {
   sendToServer(msg.urlArr, msg.titleArr, 'popup', msg.isProduction);
   return;
 });
@@ -44,13 +46,13 @@ function sendToServer(urlArr, titleArr, origin, isProduction) {
 	http.onreadystatechange = function() {
     if (http.status == 200) {
       //console.log('post success');
-      chrome.runtime.sendMessage({
+      chrome.extension.sendMessage({
         "response": "success"
       });
 	  }
     else {
       if (origin === "popup") {
-        chrome.runtime.sendMessage({
+        chrome.extension.sendMessage({
           "response": "error"
         });
       }
