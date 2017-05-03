@@ -1,25 +1,23 @@
 
 chrome.runtime.onMessage.addListener(function(msg) {
   console.log('msg', msg);
-  sendToServer(msg.urlArr, msg.titleArr, msg.isProduction);
+  if (msg.action === 'createContextMenu') {
+    chrome.contextMenus.create({
+      "id": "saveTo",
+      "type": "link",
+      "title": "Save to Collated..",
+      "contexts":["link"],
+      "onclick": saveToCollated
+    });
+  }
+  else {
+    sendToServer(msg.urlArr, msg.titleArr, msg.isProduction);
+  }
+  return;
 });
 
-//subscribe on request from content.js:
-chrome.extension.onRequest.addListener(onRequest);
-
-function onRequest(request, sender, callback){
-   if(request.action == 'createContextMenuItem') {
-     chrome.contextMenus.create({
-       "id": "saveTo",
-       "type": "link",
-       "title": "Save to Collated..",
-       "contexts":["link"],
-       "onclick": saveToCollated
-     });
-   }
-}
-
 function saveToCollated(info, tab) {
+  console.log('saveTo clicked');
   if (info.menuItemId == "saveTo"){
     alert("You have selected: " + info.selectionText);
 
