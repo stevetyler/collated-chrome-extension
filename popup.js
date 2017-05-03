@@ -1,6 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', function() {
-  var isProduction = false;
+  var isProduction;
 
   var afterLoginBlock = document.getElementById('afterLoginBlock'),
       authResponse = document.getElementById('authResponse'),
@@ -22,8 +22,12 @@ document.addEventListener('DOMContentLoaded', function() {
         postResponse.innerHTML="";
 			}, 2000);
     }
-    else {
+    else if (msg.response === "error") {
       postResponse.innerHTML= "<p class='error'>Failed to save. Please try again or contact support@collated.net<p/>";
+    }
+    else if (msg.isProduction) {
+      console.log('msg received', msg);
+      isProduction = (msg.isProduction === 'true');
     }
   });
 
@@ -49,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
         authenticateButton.innerHTML = 'Complete';
         authResponse.innerHTML = "<p class='success'>Authentication successful</p>";
 
-        // remove and replace with close button
         setTimeout(function() {
           window.close();
         }, 2000);
@@ -104,15 +107,21 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function sendToBackground(urlArr, titleArr) {
-    console.log('sendToBackground called');
     chrome.extension.sendMessage({
       urlArr: urlArr,
       titleArr: titleArr,
-      isProduction: isProduction
+      origin: 'popup',
+    });
+  }
+
+  function checkIsProduction() {
+    chrome.extension.sendMessage({
+      query: 'isProduction'
     });
   }
 
   isAuthenticated();
+  checkIsProduction();
 
   if (token) {
     chrome.tabs.query({
@@ -124,40 +133,3 @@ document.addEventListener('DOMContentLoaded', function() {
    });
   }
 });
-
-
-  // function sendToServer(urlArr, titleArr) {
-  //   postResponse.innerHTML = "";
-  //   var token = localStorage.getItem('collatedToken');
-  //   var http = new XMLHttpRequest();
-  //
-  //   var obj = {
-  //     token: token,
-  //     urlArr: urlArr,
-  //     titleArr: titleArr,
-  //   };
-  //
-  //   var jsonString = JSON.stringify(obj);
-  //
-  //   if (isProduction) {
-  //     http.open('POST', 'https://app.collated.net/api/v1/items/chrome', true);
-  //   }
-  //   else {
-  //     http.open('POST', 'http://localhost:3000/api/v1/items/chrome', true);
-  //   }
-  //
-  // 	http.setRequestHeader('Access-Control-Allow-Headers', '*');
-  // 	http.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-  // 	http.onreadystatechange = function() {
-  //     if (http.status == 200) {
-  //       postResponse.innerHTML= "<p class='success'>Save successful<p/>";
-  //       setTimeout(function() {
-  //         postResponse.innerHTML="";
-  // 			}, 2000);
-	// 	  }
-  //     else {
-	// 		   postResponse.innerHTML= "<p class='error'>Failed to save. Please try again or contact support@collated.net<p/>";
-	// 	  }
-	//   };
-  //   http.send(jsonString);
-  // }
