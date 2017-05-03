@@ -1,33 +1,30 @@
+var isProduction = false;
+
+chrome.extension.sendMessage({
+  "isProduction": isProduction
+});
 
 chrome.runtime.onMessage.addListener(function(msg) {
-  console.log('msg', msg);
-  if (msg.action === 'createContextMenu') {
-    chrome.contextMenus.create({
-      "id": "saveTo",
-      "type": "link",
-      "title": "Save to Collated..",
-      "contexts":["link"],
-      "onclick": saveToCollated
-    });
-  }
-  else {
-    sendToServer(msg.urlArr, msg.titleArr, msg.isProduction);
-  }
+  sendToServer(msg.urlArr, msg.titleArr, msg.isProduction);
   return;
 });
 
-function saveToCollated(info, tab) {
-  console.log('saveTo clicked');
-  if (info.menuItemId == "saveTo"){
-    alert("You have selected: " + info.selectionText);
+chrome.contextMenus.create({
+  "id": "saveTo",
+  "type": "normal",
+  "title": "Save to Collated...",
+  "contexts": ["link"]
+});
 
-    // chrome.runtime.sendMessage({action:'open_dialog_box'}, function(){});
-    // alert("Req sent?");
-  }
-}
+chrome.contextMenus.onClicked.addListener(function(info, tab) {
+  var url = info.linkUrl;
+  var title = info.selectionText;
 
+  sendToServer([url], [title], false);
+  return;
+});
 
-function sendToServer(urlArr, titleArr, isProduction) {
+function sendToServer(urlArr, titleArr) {
   var token = localStorage.getItem('collatedToken');
   var http = new XMLHttpRequest();
 
@@ -60,21 +57,8 @@ function sendToServer(urlArr, titleArr, isProduction) {
       chrome.runtime.sendMessage({
         "response": "error"
       });
+      alert('Error saving link, please contact support@collated.net');
 	  }
   };
   http.send(jsonString);
 }
-
-// chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-//   console.log(sender.tab ?
-//               "from a content script:" + sender.tab.url :
-//               "from the extension");
-//   if (request.greeting == "hello")
-//     sendResponse({farewell: "goodbye"});
-// });
-
-// chrome.runtime.onMessage.addListener(function(msg) {
-//   console.log('message received', msg);
-//
-//
-// });

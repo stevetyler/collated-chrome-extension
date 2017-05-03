@@ -1,6 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', function() {
-  var isProduction = false;
+  var isProduction;
 
   var afterLoginBlock = document.getElementById('afterLoginBlock'),
       authResponse = document.getElementById('authResponse'),
@@ -15,10 +15,12 @@ document.addEventListener('DOMContentLoaded', function() {
       urlTitleBox = document.getElementById('urlTitle');
 
   chrome.runtime.onMessage.addListener(function(msg) {
-    if (msg.response === "success") {
+    if (msg.isProduction) {
+      isProduction = msg.isProduction;
+    }
+    else if (msg.response === "success") {
       postResponse.innerHTML= "<p class='success'>Save successful<p/>";
 
-      // remove and replace with clear button
       setTimeout(function() {
         postResponse.innerHTML="";
 			}, 2000);
@@ -28,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
+  // move to background?
   chrome.runtime.onMessageExternal.addListener(function(msg) {
     if (!token) {
       localStorage.setItem('collatedToken', msg.token);
@@ -61,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
     chrome.tabs.update({
       url: isProduction ? 'https://app.collated.net/' : 'http://www.collated-dev.net/'
     });
+    window.close();
   });
 
   submitCurrent.addEventListener('click', function() {
@@ -108,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
     chrome.runtime.sendMessage({
       urlArr: urlArr,
       titleArr: titleArr,
-      isProduction: isProduction
+      //isProduction: isProduction
     });
   }
 
