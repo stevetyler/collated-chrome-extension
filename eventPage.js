@@ -72,7 +72,7 @@ function sendToServer(urlArr, titleArr, origin) {
             type: 'popup',
             focused: true,
             top: 100,
-            height: 150,
+            height: 170,
             width: 300
           });
         });
