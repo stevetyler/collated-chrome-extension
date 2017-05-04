@@ -1,6 +1,4 @@
-var isProduction = false;
-
-// check error running contextMenus.create: Cannot create item with duplicate id saveTo
+var isProduction = true;
 
 chrome.extension.onMessage.addListener(function(msg) {
   if (msg.query === 'isProduction') {
